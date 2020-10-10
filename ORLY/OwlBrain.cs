@@ -72,9 +72,11 @@ namespace OrlyBot
 
                 var server_id = guild.Id.ToString();
                 var blacklistedRolesDb = UserDB.db.GetDB(server_id, Globals.words.BLACKLISTED_ROLES);
-                var blacklistedRoles = (blacklistedRolesDb.roles as List<string>);
+                List<string> blacklistedRoles;
 
-                if (blacklistedRoles == null)
+                if(blacklistedRolesDb != null)
+                    blacklistedRoles = (blacklistedRolesDb.roles as List<string>);
+                else
                     blacklistedRoles = new List<string>();
 
                 foreach (var user in guild.Users)   //for each user
@@ -186,26 +188,27 @@ namespace OrlyBot
 
             dynamic dbSuspiciousWords = UserDB.db.GetDB(guild.Id.ToString(), Globals.words.SUSPICION_WORDS);
 
-            bool suspicious = false;
-
-            string noCaseMessage = msg.Content.ToUpper();
-
-            foreach (var word in dbSuspiciousWords.words)
+            if (dbSuspiciousWords != null)
             {
-                if (noCaseMessage.Contains((string)word))
+                bool suspicious = false;
+
+                string noCaseMessage = msg.Content.ToUpper();
+
+                foreach (var word in dbSuspiciousWords.words)
                 {
-                    suspicious = true;
-                    break;
+                    if (noCaseMessage.Contains((string)word))
+                    {
+                        suspicious = true;
+                        break;
+                    }
+                }
+
+                if (suspicious)
+                {
+                    await ReportSuspicious(context, msg, "Message contains suspicious words");
+                    return true;
                 }
             }
-
-            if (suspicious)
-            {
-                await ReportSuspicious(context, msg, "Message contains suspicious words");
-                return true;
-            }
-
-            //TODO: evaluate quick rejoin
 
             return false;
         }
