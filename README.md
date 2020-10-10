@@ -18,7 +18,7 @@ Discord Bot that restores a user's roles when they rejoin the server and reports
 This bot only saves Discord ulong IDs and data submitted via bot commands. It does not require any sort of database system as it uses serialized objects to json for data retention.
 
 # Commands 
--orly.add_blacklisted_roles @role1 @role2 @role3
+- orly.add_blacklisted_roles @role1 @role2 @role3
 - orly.remove_blacklisted_roles @role1 @role2 @role3
 - orly.clear_blacklisted_roles
 - orly.show_blacklisted_roles
