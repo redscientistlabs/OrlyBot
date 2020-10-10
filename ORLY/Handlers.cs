@@ -496,5 +496,24 @@ orly.show_ignored_channels
             }
         }
 
+        internal static async Task MessageDeleted(Discord.Cacheable<Discord.IMessage, ulong> cachedMsg, ISocketMessageChannel channel)
+        {
+            if (cachedMsg.HasValue)
+            {
+                var imsg = cachedMsg.Value;
+
+                if (imsg is SocketUserMessage msg)
+                {
+                    SocketCommandContext context = new SocketCommandContext(Globals.discord, msg);
+                    bool suspicious = await OwlBrain.EvaluateSuspiciousness(context, msg);
+
+                    if (suspicious)
+                    {
+                        await OwlBrain.ReportSuspicious(context, msg, "Suspicious message was deleted");
+                    }
+
+                }
+            }
+        }
     }
 }

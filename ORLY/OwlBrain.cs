@@ -171,6 +171,25 @@ namespace OrlyBot
             }
 
         }
+
+        internal static async Task<bool> ReportSuspiciousness(SocketCommandContext context, SocketUserMessage msg)
+        {
+            bool actionTaken = false;
+
+            bool suspicious = await EvaluateSuspiciousness(context, msg);
+
+            if (suspicious)
+            {
+                var msgId = msg.Id;
+                var channelObj = msg.Channel;
+
+                await ReportSuspicious(context, msg, "Message contains suspicious words");
+
+                actionTaken = true;
+            }
+
+            return actionTaken;
+        }
         internal static async Task<bool> EvaluateSuspiciousness(SocketCommandContext context, SocketUserMessage msg)
         {
             var guild = context.Guild;
@@ -190,24 +209,12 @@ namespace OrlyBot
 
             if (dbSuspiciousWords != null)
             {
-                bool suspicious = false;
-
                 string noCaseMessage = msg.Content.ToUpper();
 
                 foreach (var word in dbSuspiciousWords.words)
-                {
                     if (noCaseMessage.Contains((string)word))
-                    {
-                        suspicious = true;
-                        break;
-                    }
-                }
+                        return true;
 
-                if (suspicious)
-                {
-                    await ReportSuspicious(context, msg, "Message contains suspicious words");
-                    return true;
-                }
             }
 
             return false;

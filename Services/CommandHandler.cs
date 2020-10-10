@@ -35,11 +35,10 @@ namespace OrlyBot
             _discord.GuildMemberUpdated += Handlers.GuildMemberUpdated;
             _discord.UserJoined += Handlers.UserJoined;
             _discord.UserLeft += Handlers.UserLeft;
+            _discord.MessageDeleted += Handlers.MessageDeleted;
 
 
         }
-
-
 
         private async Task OnMessageReceivedAsync(SocketMessage s)
         {
@@ -58,8 +57,8 @@ namespace OrlyBot
             if (string.IsNullOrWhiteSpace(msg.Content))
                 return;
 
-            if (await OwlBrain.EvaluateSuspiciousness(context, msg))
-                return;
+            if (await OwlBrain.ReportSuspiciousness(context, msg)) // returns true if an action was taken
+                return; //don't evaluate further if an action was taken
 
             var mentionnedUsers = s.MentionedUsers;
             var mentionnedRoles = s.MentionedRoles;
