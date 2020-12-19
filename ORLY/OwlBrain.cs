@@ -75,9 +75,10 @@ namespace OrlyBot
                 List<string> blacklistedRoles;
 
                 if(blacklistedRolesDb != null)
-                    blacklistedRoles = (blacklistedRolesDb.roles as List<string>);
+                    blacklistedRoles = (blacklistedRolesDb.roles as List<string> ?? new List<string>());
                 else
                     blacklistedRoles = new List<string>();
+
 
                 foreach (var user in guild.Users)   //for each user
                 {
