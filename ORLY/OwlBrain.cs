@@ -94,7 +94,9 @@ namespace OrlyBot
 
                         foreach (var role in (userStatus.roles_to_add as List<SocketRole>))
                         {
-                            if (blacklistedRoles.Contains(role.Id.ToString()))
+                            if (blacklistedRoles.Contains(role.Id.ToString()) || 
+                                role.ToString().Contains("Nitro") ||
+                                role.ToString().Contains("Booster"))
                                 continue;
 
                             try
@@ -141,7 +143,7 @@ namespace OrlyBot
         {
             var server_id = user.Guild.Id.ToString();
             var blacklistedRolesDb = UserDB.db.GetDB(server_id, Globals.words.BLACKLISTED_ROLES);
-            var blacklistedRoles = (blacklistedRolesDb.roles as List<string>);
+            var blacklistedRoles = (blacklistedRolesDb?.roles as List<string>);
 
             if (blacklistedRoles == null)
                 blacklistedRoles = new List<string>();

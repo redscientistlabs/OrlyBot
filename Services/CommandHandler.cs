@@ -52,6 +52,10 @@ namespace OrlyBot
 
             var guild = context.Guild;
             var user = guild.Users.FirstOrDefault(iterator => iterator.Id == msg.Author.Id);
+
+            if (user == null)
+                return;
+
             var isUserAdmin = user.GuildPermissions.Administrator;
 
             if (string.IsNullOrWhiteSpace(msg.Content))
