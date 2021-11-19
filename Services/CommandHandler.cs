@@ -61,6 +61,9 @@ namespace OrlyBot
             if (string.IsNullOrWhiteSpace(msg.Content))
                 return;
 
+            if (await BotDetector.Instance.ScanMessage(context, msg)) // returns true if an action was taken
+                return; //don't evaluate further if an action was taken
+
             if (await OwlBrain.ReportSuspiciousness(context, msg)) // returns true if an action was taken
                 return; //don't evaluate further if an action was taken
 

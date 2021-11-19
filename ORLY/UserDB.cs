@@ -3,6 +3,7 @@ using Discord.Commands;
 using Discord.WebSocket;
 using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -50,7 +51,8 @@ namespace OrlyBot
                 {
                     var db = System.IO.File.ReadAllText(dbPath);
 
-                    dynamic obj = JsonConvert.DeserializeObject(db);
+                    var converter = new ExpandoObjectConverter();
+                    dynamic obj = JsonConvert.DeserializeObject<ExpandoObject>(db, converter);
 
                     dbCache[dbPath] = obj;
 
@@ -104,6 +106,24 @@ namespace OrlyBot
 
             return dbUser;
         }
+
+        internal async Task<dynamic> UpdateUserRoles(string server_id, string user_id, List<string> roles)
+        {
+            dynamic dbUser = GetDatabaseObject(Path.Combine(Globals.baseDir.FullName, server_id, $"USER_{user_id}.json"));
+            dbUser.roles = roles;
+            SetDatabaseObject(Path.Combine(Globals.baseDir.FullName, server_id, $"USER_{user_id}.json"), dbUser);
+
+            return dbUser;
+        }
+        internal async Task<dynamic> UpdateUserTimestamps(string server_id, string user_id, List<msgTimestamp> timestamps)
+        {
+            dynamic dbUser = GetDatabaseObject(Path.Combine(Globals.baseDir.FullName, server_id, $"USER_{user_id}.json"));
+            dbUser.timestamps = timestamps;
+            SetDatabaseObject(Path.Combine(Globals.baseDir.FullName, server_id, $"USER_{user_id}.json"), dbUser);
+
+            return dbUser;
+        }
+
         internal dynamic GetDB(string server_id, string database_id)
         {
             return GetDatabaseObject(Path.Combine(Globals.baseDir.FullName, server_id, $"DB_{database_id}.json"));

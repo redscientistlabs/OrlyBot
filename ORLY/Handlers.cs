@@ -479,7 +479,8 @@ orly.show_ignored_channels
                 if (rolesAdded.Count() > 0 || rolesRemoved.Count() > 0)
                 {
                     // a role was changed
-                    UserDB.db.SetUser(server_id, user_id, roles);
+                    UserDB.db.UpdateUserRoles(server_id, user_id, roles);
+                    //UserDB.db.SetUser(server_id, user_id, roles);
                 }
 
                 if (rolesAdded.Count() > 0)

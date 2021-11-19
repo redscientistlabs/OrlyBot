@@ -17,7 +17,7 @@ namespace OrlyBot
 {
     static class OwlBrain
     {
-        internal static async Task<dynamic> GetUserStatus(SocketGuildUser user)
+        public static async Task<dynamic> GetUserStatus(SocketGuildUser user)
         {
             dynamic userStatus = new ExpandoObject();
 
@@ -48,8 +48,14 @@ namespace OrlyBot
             userStatus.roles_to_add = roles_to_add;                 //List<SocketRole>
             userStatus.roles_to_remove = roles_to_remove;           //List<SocketRole>
 
+            if (!((IDictionary<String, object>)dbUser).ContainsKey("timestamps"))
+                userStatus.timestamps = new List<msgTimestamp>();
+            else
+                userStatus.timestamps = dbUser.timestamps;              //timestamps
+
             return userStatus;
         }
+
         internal static async Task RunStartupJob(ServiceCollection services, bool restoreAllFromDb = false)
         {
             if (services != null && Globals.discord == null)
@@ -183,9 +189,6 @@ namespace OrlyBot
 
             if (suspicious)
             {
-                var msgId = msg.Id;
-                var channelObj = msg.Channel;
-
                 await ReportSuspicious(context, msg, "Message contains suspicious words");
 
                 actionTaken = true;
