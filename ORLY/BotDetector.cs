@@ -69,7 +69,7 @@ namespace OrlyBot
 
                 var seconds = (lastTimeStamp.Stamp - firstTimestamp.Stamp).TotalSeconds;
 
-                if(seconds < 45) // if posted 4 messages in 45 seconds
+                if(seconds < 90) // if posted 4 messages in 90 seconds
                 {
                     var channels = timestamps.Select(it => it.ChannelID);
                     bool allDifferentChannels = channels.Distinct().Count() == channels.Count();
